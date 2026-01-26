@@ -10,4 +10,11 @@ module "ec2" {
 
   instance_type = var.instance_type
   subnet_id = module.vpc.public_subnet_id
+  security_group_id = module.security_group.security_group_id
+}
+
+module "security_group" {
+  source = "./infra/modules/security_group"
+
+  vpc_id = module.vpc.vpc_id
 }
