@@ -44,10 +44,13 @@ jobs:
 
       - name: Commit and push changes
         env:
-          IAC_TOKEN : ${{ secrets.IAC_TOKEN  }}
+          IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./infra/modules/*/README.md
-          git diff --cached --exit-code || git commit -m "Update Terraform module documentation"
-          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+          
+          git diff --quiet || (
+            git add README.md infra/modules/**/README.md
+            git commit -m "docs: update terraform docs"
+            git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
+          )
