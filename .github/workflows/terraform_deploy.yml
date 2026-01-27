@@ -46,7 +46,7 @@ jobs:
 
       - name: Terraform Workspace
         run: |
-          tofu workspace select ${{ env.ENV }} || tofu workspace new ${{ env.ENV }}
+          tofu workspace select -chdir=infra ${{ env.ENV }} || tofu workspace new -chdir=infra ${{ env.ENV }}
 
       - name: Terraform Plan
         run: |
