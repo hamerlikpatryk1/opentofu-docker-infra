@@ -1,0 +1,43 @@
+name: Generate Terraform Docs
+
+on:
+  push:
+    branches:
+      - main
+      - IaCTofu
+  pull_request:
+
+jobs:
+  terraform-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.11.4
+          cli_config_credentials_token: ${{ secrets.TF_TOKEN }}
+
+      - name: Install terraform-docs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl -sL https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz | tar -xz
+          sudo mv terraform-docs /usr/local/bin/
+
+      - name: Generate docs for modules
+        run: |
+          terraform-docs markdown table ./infra/modules/vpc >> ./docs/modules/vpc/README.md
+          terraform-docs markdown table ./infra/modules/ec2 >> ./docs/modules/ec2/README.md
+          terraform-docs markdown table ./infra/modules/security_group >> ./docs/modules/security_group/README.md
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./docs/modules/*/README.md
+          git diff --cached --exit-code || git commit -m "Update Terraform module documentation"
+          git push 
