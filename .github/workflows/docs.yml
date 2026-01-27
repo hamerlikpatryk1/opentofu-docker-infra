@@ -49,7 +49,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
             git config --global user.email "github-actions[bot]@users.noreply.github.com" 
           
-          git diff --quiet || (
+          git diff --quiet -- README.md infra/modules/**/README.md || (
             git add README.md infra/modules/**/README.md
             git commit -m "docs: update terraform docs"
             git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
