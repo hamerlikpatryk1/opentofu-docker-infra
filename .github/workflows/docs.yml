@@ -1,6 +1,7 @@
 name: Generate Terraform Docs
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -32,8 +33,14 @@ jobs:
           curl -sL https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz | tar -xz
           sudo mv terraform-docs /usr/local/bin/
 
+      - name: Sleep 10 seconds
+        run: sleep 10
+
       - name: Generate docs for root module
         run: terraform-docs markdown table --output-file README.md --output-mode inject .
+      
+      - name: Sleep 10 seconds
+        run: sleep 10
 
       - name: Generate docs for all modules
         working-directory: ${{ github.workspace }}
@@ -41,6 +48,9 @@ jobs:
           for module in infra/modules/*; do
             terraform-docs markdown table --output-file README.md --output-mode inject "$module"
           done
+          
+      - name: Sleep 10 seconds
+        run: sleep 10
 
       - name: Commit and push changes
         env:
