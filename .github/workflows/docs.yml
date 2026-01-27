@@ -33,20 +33,7 @@ jobs:
           sudo mv terraform-docs /usr/local/bin/
 
       - name: Generate docs for root module
-        run: |
-          terraform-docs markdown table . --output-file README.md --output-mode inject
-
-      - name: Debug module READMEs before docs
-        run: |
-          echo "===== VPC README (before) ====="
-          cat infra/modules/vpc/README.md || true
-
-          echo "===== EC2 README (before) ====="
-          cat infra/modules/ec2/README.md || true
-
-          echo "===== SG README (before) ====="
-          cat infra/modules/security_group/README.md || true
-
+        run: terraform-docs markdown table . --output-file README.md --output-mode inject
 
       - name: Generate docs for VPC
         working-directory: infra/modules/vpc
@@ -59,17 +46,6 @@ jobs:
       - name: Generate docs for Security Group
         working-directory: infra/modules/security_group
         run: terraform-docs markdown table . --output-file README.md --output-mode inject
-
-
-      - name: Debug module READMEs after docs
-        run: |
-          echo "===== VPC README (after) ====="
-          cat infra/modules/vpc/README.md
-
-          echo "===== EC2 README (after) ====="
-          cat infra/modules/ec2/README.md
-          echo "===== SG README (after) ====="
-          cat infra/modules/security_group/README.md
 
       - name: Commit and push changes
         env:
