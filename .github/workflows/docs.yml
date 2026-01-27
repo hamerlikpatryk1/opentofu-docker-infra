@@ -35,9 +35,11 @@ jobs:
           terraform-docs markdown table ./infra/modules/security_group >> ./infra/modules/security_group/README.md
 
       - name: Commit and push changes
+        env:
+          IACACTIONSTOKEN: ${{ secrets.IACACTIONSTOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add ./infra/modules/*/README.md
           git diff --cached --exit-code || git commit -m "Update Terraform module documentation"
-          git push 
+          git push https://x-access-token:${IACACTIONSTOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
