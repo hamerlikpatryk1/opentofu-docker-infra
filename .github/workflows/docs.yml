@@ -53,7 +53,6 @@ jobs:
       - name: Commit and push changes
         env:
           IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
-        working-directory: ${{ github.workspace }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
