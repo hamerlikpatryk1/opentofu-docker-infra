@@ -5,19 +5,42 @@ on:
     branches:
       - main
       - IaCTofu
+  pull_request:
 
 jobs:
-  terraform:
+  determine-env:
+    name: Determine environment
     runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.setenv.outputs.env }}
+    steps:
+      - name: Set environment based on branch
+        id: setenv
+        run: |
+          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            echo "env=prod" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF##*/}" == "staging" ]]; then
+            echo "env=staging" >> $GITHUB_OUTPUT
+          else
+            echo "env=dev" >> $GITHUB_OUTPUT
+          fi
+
+  terraform:
+    name: Tofu Deploy
+    needs: determine-env
+    runs-on: ubuntu-latest
+
+    environment: ${{ needs.determine-env.outputs.env }}
 
     env:
       TF_IN_AUTOMATION: "true"
+      ENV: ${{ needs.determine-env.outputs.env }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup OpenTofu
+      - name: Setup Tofu
         uses: opentofu/setup-opentofu@v1
         with:
           tofu_version: 1.11.4
@@ -28,31 +51,24 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-north-1
-
-      - name: Select environment
-        id: env
+      
+      - name: Generate tfvars
         run: |
-          echo "ENV=dev" >> $GITHUB_ENV
-          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
-            echo "ENV=prod" >> $GITHUB_ENV
-          fi
-          if [[ "${GITHUB_REF##*/}" == "IaCTofu" ]]; then
-            echo "ENV=staging" >> $GITHUB_ENV
-          fi
+          mkdir -p infra/envs
+          echo "${{ secrets.TFVARS }}" > infra/envs/${ENV}.tfvars
 
-      - name: Terraform Init
+      - name: Tofu Init
+        run: tofu init
+
+      - name: Tofu Workspace
         run: |
-          tofu init
+          tofu workspace select ${ENV } || tofu workspace new ${ENV}
 
-      - name: Terraform Workspace
+      - name: Tofu Plan
         run: |
-          tofu workspace select ${{ env.ENV }} || tofu workspace new ${{ env.ENV }}
+          tofu plan -var-file="infra/envs/${ENV}.tfvars"
 
-      - name: Terraform Plan
-        run: |
-          tofu plan -var-file="infra/envs/${{ env.ENV }}.tfvars"
-
-      - name: Terraform Apply
+      - name: Tofu Apply
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
         run: |
-          tofu apply -auto-approve -var-file="infra/envs/${{ env.ENV }}.tfvars"
+          tofu apply -auto-approve -var-file="infra/envs/${ENV }.tfvars"
