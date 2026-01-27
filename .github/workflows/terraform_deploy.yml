@@ -42,17 +42,17 @@ jobs:
 
       - name: Terraform Init
         run: |
-          tofu init -chdir=infra
+          tofu -chdir=infra init
 
       - name: Terraform Workspace
         run: |
-          tofu workspace select -chdir=infra ${{ env.ENV }} || tofu workspace new -chdir=infra ${{ env.ENV }}
+          tofu -chdir=infra workspace select ${{ env.ENV }} || tofu -chdir=infra workspace new ${{ env.ENV }}
 
       - name: Terraform Plan
         run: |
-          tofu plan -var-file="infra/envs/${{ env.ENV }}.tfvars"
+          tofu -chdir=infra plan -var-file="envs/${{ env.ENV }}.tfvars"
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' 
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
         run: |
-          tofu apply -auto-approve -var-file="infra/envs/${{ env.ENV }}.tfvars"
+          tofu -chdir=infra apply -auto-approve -var-file="envs/${{ env.ENV }}.tfvars"
