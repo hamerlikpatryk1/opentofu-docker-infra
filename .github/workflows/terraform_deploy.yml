@@ -50,7 +50,7 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          tofu -chdir=infra plan -var-file="envs/${{ env.ENV }}.tfvars"
+          tofu -chdir=infra plan -var-file="infra/envs/${{ env.ENV }}.tfvars"
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
