@@ -42,7 +42,7 @@ jobs:
 
       - name: Terraform Init
         run: |
-          tofu init
+          tofu init -chdir=infra
 
       - name: Terraform Workspace
         run: |
@@ -50,9 +50,9 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          tofu plan -var-file="envs/${{ env.ENV }}.tfvars"
+          tofu plan -var-file="infra/envs/${{ env.ENV }}.tfvars"
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'  # only apply on main branch
+        if: github.ref == 'refs/heads/main' 
         run: |
-          tofu apply -auto-approve -var-file="envs/${{ env.ENV }}.tfvars"
+          tofu apply -auto-approve -var-file="infra/envs/${{ env.ENV }}.tfvars"
