@@ -10,6 +10,7 @@ module "security_group" {
 
   vpc_id = module.vpc.vpc_id
 }
+```
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

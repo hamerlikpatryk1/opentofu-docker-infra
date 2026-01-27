@@ -12,6 +12,7 @@ module "ec2" {
   subnet_id         = module.vpc.public_subnet_id
   security_group_id = module.security_group.security_group_id
 }
+```
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
