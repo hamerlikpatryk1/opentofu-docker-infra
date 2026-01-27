@@ -56,7 +56,9 @@ jobs:
       - name: Generate tfvars
         run: |
           mkdir -p infra/envs
-          printf '%s' "${{ secrets.TFVARS }}" > infra/envs/${ENV}.tfvars
+          cat <<'EOF' > infra/envs/${ENV}.tfvars
+        ${{ secrets.TFVARS }}
+        EOF
 
       - name: Show generated tfvars
         run: |
