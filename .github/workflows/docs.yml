@@ -36,18 +36,40 @@ jobs:
         run: |
           terraform-docs markdown table . --output-file README.md --output-mode inject
 
+      - name: Debug module READMEs before docs
+        run: |
+          echo "===== VPC README (before) ====="
+          cat infra/modules/vpc/README.md || true
+
+          echo "===== EC2 README (before) ====="
+          cat infra/modules/ec2/README.md || true
+
+          echo "===== SG README (before) ====="
+          cat infra/modules/security_group/README.md || true
+
+
       - name: Generate docs for modules
         run: |
           terraform-docs markdown table ./infra/modules/vpc --output-file ./README.md --output-mode inject
           terraform-docs markdown table ./infra/modules/ec2 --output-file ./README.md --output-mode inject
           terraform-docs markdown table ./infra/modules/security_group --output-file ./README.md --output-mode inject
 
+      - name: Debug module READMEs after docs
+        run: |
+          echo "===== VPC README (after) ====="
+          cat infra/modules/vpc/README.md
+
+          echo "===== EC2 README (after) ====="
+          cat infra/modules/ec2/README.md
+          echo "===== SG README (after) ====="
+          cat infra/modules/security_group/README.md
+
       - name: Commit and push changes
         env:
           IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" 
 
           git diff --quiet -- README.md infra/modules/**/README.md || (
             git add README.md infra/modules/**/README.md
