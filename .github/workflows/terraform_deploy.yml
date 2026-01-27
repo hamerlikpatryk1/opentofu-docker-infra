@@ -58,6 +58,10 @@ jobs:
           mkdir -p infra/envs
           printf '%s' "${{ secrets.TFVARS }}" > infra/envs/${ENV}.tfvars
 
+      - name: Show generated tfvars
+        run: |
+          cat infra/envs/${ENV}.tfvars
+
       - name: Tofu Init
         run: tofu init
 
