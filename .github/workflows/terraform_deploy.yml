@@ -1,0 +1,58 @@
+name: Terraform Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - IaCTofu
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_IN_AUTOMATION: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.11.4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+
+      - name: Select environment
+        id: env
+        run: |
+          echo "ENV=dev" >> $GITHUB_ENV
+          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            echo "ENV=prod" >> $GITHUB_ENV
+          fi
+          if [[ "${GITHUB_REF##*/}" == "IaCTofu" ]]; then
+            echo "ENV=staging" >> $GITHUB_ENV
+          fi
+
+      - name: Terraform Init
+        run: |
+          tofu init
+
+      - name: Terraform Workspace
+        run: |
+          tofu workspace select ${{ env.ENV }} || tofu workspace new ${{ env.ENV }}
+
+      - name: Terraform Plan
+        run: |
+          tofu plan -var-file="envs/${{ env.ENV }}.tfvars"
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'  # only apply on main branch
+        run: |
+          tofu apply -auto-approve -var-file="envs/${{ env.ENV }}.tfvars"
