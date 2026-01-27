@@ -18,9 +18,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup OpenTofu
-        uses: hashicorp/setup-terraform@v2
+        uses: opentofu/setup-opentofu@v1
         with:
-          terraform_version: 1.11.4
+          tofu_version: 1.11.4
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
