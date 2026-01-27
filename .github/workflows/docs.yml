@@ -31,9 +31,12 @@ jobs:
           sudo apt-get install -y curl
           curl -sL https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz | tar -xz
           sudo mv terraform-docs /usr/local/bin/
+        
+      - name: Generate Terraform Docs
+        run: terraform-docs markdown table . --output-file README.TF.md
 
-      - name: Generate docs for root module
-        run: terraform-docs markdown table --output-file README.md --output-mode inject .
+      - name: Merge README
+        run: cat README.TF.md >> README.md
 
       - name: Generate docs for VPC
         working-directory: infra/modules/vpc

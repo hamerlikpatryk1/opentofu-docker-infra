@@ -1,5 +1,5 @@
 formatter: "markdown"
 output:
-  mode: inject
-  file: README.md
+  mode: file
+  file: "README.TF.md"
 content: "{{ .Content }}"
