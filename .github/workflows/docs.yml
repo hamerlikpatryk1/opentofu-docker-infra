@@ -48,11 +48,18 @@ jobs:
           cat infra/modules/security_group/README.md || true
 
 
-      - name: Generate docs for modules
-        run: |
-          terraform-docs markdown table infra/modules/vpc --output-file infra/modules/vpc/README.md --output-mode inject
-          terraform-docs markdown table infra/modules/ec2 --output-file infra/modules/ec2/README.md --output-mode inject
-          terraform-docs markdown table infra/modules/security_group --output-file infra/modules/security_group/README.md --output-mode inject
+      - name: Generate docs for VPC
+        working-directory: infra/modules/vpc
+        run: terraform-docs markdown table . --output-file README.md --output-mode inject
+
+      - name: Generate docs for EC2
+        working-directory: infra/modules/ec2
+        run: terraform-docs markdown table . --output-file README.md --output-mode inject
+
+      - name: Generate docs for Security Group
+        working-directory: infra/modules/security_group
+        run: terraform-docs markdown table . --output-file README.md --output-mode inject
+
 
       - name: Debug module READMEs after docs
         run: |
