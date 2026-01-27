@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - IaCTofu
+    paths-ignore:
+      - "README.md"
+      - "infra/modules/**/README.md"
   pull_request:
 
 jobs:
@@ -29,11 +32,15 @@ jobs:
           curl -sL https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz | tar -xz
           sudo mv terraform-docs /usr/local/bin/
 
+      - name: Generate docs for root module
+        run: |
+          terraform-docs markdown table . --output-file README.md --output-mode inject
+
       - name: Generate docs for modules
         run: |
-          terraform-docs markdown table ./infra/modules/vpc >> ./infra/modules/vpc/README.md
-          terraform-docs markdown table ./infra/modules/ec2 >> ./infra/modules/ec2/README.md
-          terraform-docs markdown table ./infra/modules/security_group >> ./infra/modules/security_group/README.md
+          terraform-docs markdown table ./infra/modules/vpc --output-file ./infra/modules/vpc/README.md --output-mode inject
+          terraform-docs markdown table ./infra/modules/ec2 --output-file ./infra/modules/ec2/README.md --output-mode inject
+          terraform-docs markdown table ./infra/modules/security_group --output-file ./infra/modules/security_group/README.md --output-mode inject
 
       - name: Commit and push changes
         env:
