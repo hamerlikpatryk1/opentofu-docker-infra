@@ -56,7 +56,7 @@ jobs:
       - name: Generate tfvars
         run: |
           mkdir -p infra/envs
-          echo "${{ secrets.TFVARS }}" > infra/envs/${ENV}.tfvars
+          printf '%s' "${{ secrets.TFVARS }}" > infra/envs/${ENV}.tfvars
 
       - name: Tofu Init
         run: tofu init
