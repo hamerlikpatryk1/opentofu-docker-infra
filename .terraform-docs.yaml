@@ -1,0 +1,5 @@
+formatter: "markdown"
+output:
+  mode: inject
+  file: README.md
+content: "{{ .Content }}"
