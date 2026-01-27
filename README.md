@@ -33,7 +33,9 @@ module "ec2" {
   security_group_id = module.security_group.security_group_id
 }
 ```
-## TF DOCS
+# OpenTofu Docker Infrastructure
+
+...
 
 <!-- BEGIN_TF_DOCS -->
 <!-- END_TF_DOCS -->
