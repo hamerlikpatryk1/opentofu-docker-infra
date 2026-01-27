@@ -62,7 +62,7 @@ jobs:
 
       - name: Tofu Workspace
         run: |
-          tofu workspace select ${ENV } || tofu workspace new ${ENV}
+          tofu workspace select ${ENV} || tofu workspace new ${ENV}
 
       - name: Tofu Plan
         run: |
@@ -71,4 +71,4 @@ jobs:
       - name: Tofu Apply
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
         run: |
-          tofu apply -auto-approve -var-file="infra/envs/${ENV }.tfvars"
+          tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
