@@ -35,27 +35,19 @@ jobs:
       - name: Generate docs for root module
         run: terraform-docs markdown table --output-file README.md --output-mode inject .
 
-      - name: Generate docs for VPC
-        working-directory: infra/modules/vpc
-        run: terraform-docs markdown table --output-file README.md --output-mode inject .
-
-      - name: Generate docs for EC2
-        working-directory: infra/modules/ec2
-        run: terraform-docs markdown table --output-file README.md --output-mode inject .
-
-      - name: Generate docs for Security Group
-        working-directory: infra/modules/security_group
-        run: terraform-docs markdown table --output-file README.md --output-mode inject .
+      - name: Generate docs for all modules
+        run: |
+          for module in infra/modules/*; do
+            terraform-docs markdown table --output-file $module/README.md --output-mode inject $module
+          done
 
       - name: Commit and push changes
         env:
           IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git diff --quiet -- README.md infra/modules/**/README.md || (
-            git add README.md infra/modules/**/README.md
-            git commit -m "docs: update terraform docs"
-            git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
-          )
+          git add README.md infra/modules/**/README.md
+          git diff --cached --quiet || git commit -m "docs: update terraform docs"
+          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
