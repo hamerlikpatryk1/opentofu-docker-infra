@@ -38,9 +38,9 @@ jobs:
 
       - name: Generate docs for modules
         run: |
-          terraform-docs markdown table ./infra/modules/vpc --output-file ./infra/modules/vpc/README.md --output-mode inject
-          terraform-docs markdown table ./infra/modules/ec2 --output-file ./infra/modules/ec2/README.md --output-mode inject
-          terraform-docs markdown table ./infra/modules/security_group --output-file ./infra/modules/security_group/README.md --output-mode inject
+          terraform-docs markdown table ./infra/modules/vpc --output-file ./README.md --output-mode inject
+          terraform-docs markdown table ./infra/modules/ec2 --output-file ./README.md --output-mode inject
+          terraform-docs markdown table ./infra/modules/security_group --output-file ./README.md --output-mode inject
 
       - name: Commit and push changes
         env:
