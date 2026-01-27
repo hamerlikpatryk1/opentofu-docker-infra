@@ -14,12 +14,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.11.4
-          cli_config_credentials_token: ${{ secrets.TF_TOKEN }}
 
       - name: Install terraform-docs
         run: |
@@ -36,10 +37,10 @@ jobs:
 
       - name: Commit and push changes
         env:
-          IACACTIONSTOKEN: ${{ secrets.IACACTIONSTOKEN }}
+          IAC_TOKEN : ${{ secrets.IAC_TOKEN  }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add ./infra/modules/*/README.md
           git diff --cached --exit-code || git commit -m "Update Terraform module documentation"
-          git push https://x-access-token:${IACACTIONSTOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
+          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
