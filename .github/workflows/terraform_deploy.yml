@@ -13,8 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       env: ${{ steps.setenv.outputs.env }}
+
     steps:
-      - name: Set environment based on branch
+      - name: Determine environment
         id: setenv
         run: |
           if [[ "${GITHUB_REF##*/}" == "main" ]]; then
@@ -62,7 +63,7 @@ jobs:
 
       - name: Tofu Workspace
         run: |
-          tofu workspace select ${ENV} || tofu workspace new ${ENV}
+          tofu workspace select -or-create ${ENV}
 
       - name: Tofu Plan
         run: |
