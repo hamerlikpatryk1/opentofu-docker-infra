@@ -38,7 +38,7 @@ jobs:
       - name: Generate docs for all modules
         run: |
           for module in infra/modules/*; do
-            terraform-docs markdown table --output-file $module/README.md --output-mode inject $module
+            terraform-docs markdown table --output-mode inject "$module"
           done
 
       - name: Commit and push changes
