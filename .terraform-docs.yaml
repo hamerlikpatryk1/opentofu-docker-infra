@@ -1,5 +1,0 @@
-formatter: "markdown"
-output:
-  mode: file
-  file: "README.TF.md"
-content: "{{ .Content }}"
