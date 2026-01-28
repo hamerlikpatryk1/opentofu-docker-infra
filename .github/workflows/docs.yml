@@ -40,17 +40,26 @@ jobs:
         run: |
           terraform-docs markdown table --output-file README.md --output-mode inject .
           cat README.md
-
       
       - name: Sleep 10 seconds
         run: sleep 10
 
-      - name: Generate docs for all modules
-        working-directory: ${{ github.workspace }}
+      - name: Generate docs for VPC module
+        working-directory: infra/modules/vpc
         run: |
-          for module in infra/modules/*; do
-            terraform-docs markdown table --output-file README.md --output-mode inject "$module"
-          done
+          terraform-docs markdown table --output-file README.md --output-mode inject .
+          cat README.md
+
+      - name: Generate docs for EC2 module
+        working-directory: infra/modules/ec2
+        run: |
+          terraform-docs markdown table --output-file README.md --output-mode inject .
+          cat README.md
+
+      - name: Generate docs for Security Group module
+        working-directory: infra/modules/security_group
+        run: |
+          terraform-docs markdown table --output-file README.md --output-mode inject .
           cat README.md
 
       - name: Sleep 10 seconds
