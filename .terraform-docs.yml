@@ -1,4 +1,7 @@
 output:
   file: ""
   mode: inject
-  template: "{{ .Content }}"
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
