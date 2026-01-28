@@ -37,8 +37,9 @@ jobs:
         run: sleep 10
 
       - name: Generate docs for root module
-        run: terraform-docs markdown table --output-file README.md --output-mode inject .
-             cat README.md
+        run: |
+          terraform-docs markdown table --output-file README.md --output-mode inject .
+          cat README.md
 
       
       - name: Sleep 10 seconds
