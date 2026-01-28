@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - IaCTofu
+    paths-ignore:
+      - "README.md"
+      - "infra/modules/**/README.md"
   pull_request:
 
 jobs:
