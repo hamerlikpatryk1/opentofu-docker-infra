@@ -34,10 +34,13 @@ jobs:
           sudo mv terraform-docs /usr/local/bin/
 
       - name: Generate docs for root module
-        working-directory: ${{ github.workspace }}
-        run: |
-          terraform-docs --config .terraform-docs.yml .
-          cat README.md
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-dir: .
+          config-file: .terraform-docs.yml
+          output-file: README.md
+          output-method: inject
+          git-push: "true"
       
       - name: Sleep 10 seconds
         run: sleep 10
