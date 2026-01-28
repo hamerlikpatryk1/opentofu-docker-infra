@@ -1,7 +1,18 @@
 output:
-  file: ""
-  mode: inject
+  file: "README.md"
+  mode: file
   template: |-
+    # OpenTofu Docker Infrastructure
+
+    Infrastructure as Code demo using OpenTofu and Docker Compose.
+
+    ## Example
+    ```hcl
+    module "vpc" {
+      source = "./infra/modules/vpc"
+    }
+    ```
+
     <!-- BEGIN_TF_DOCS -->
     ## Requirements
     {{ .Requirements }}
