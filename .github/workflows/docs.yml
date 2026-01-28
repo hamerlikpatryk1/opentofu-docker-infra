@@ -40,6 +40,7 @@ jobs:
           config-file: .terraform-docs.yml
           output-file: README.md
           output-method: inject
+          git-push: false
       
       - name: Sleep 10 seconds
         run: sleep 10
