@@ -36,7 +36,7 @@ jobs:
       - name: Generate docs for root module
         working-directory: ${{ github.workspace }}
         run: |
-          terraform-docs --config .terraform-docs.yml --output-file README.md --output-mode inject .
+          terraform-docs --config .terraform-docs.yml .
           cat README.md
       
       - name: Sleep 10 seconds
