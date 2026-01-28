@@ -40,9 +40,7 @@ jobs:
           config-file: .terraform-docs.yml
           output-file: README.md
           output-method: inject
-          git-push: true
-        env:
-          IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
+          git-push: false
       
       - name: Sleep 10 seconds
         run: sleep 10
@@ -68,13 +66,12 @@ jobs:
       - name: Sleep 10 seconds
         run: sleep 10
 
-      - name: Commit and push changes
+      - name: Commit and push all README updates
         env:
           IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add infra/modules/**/README.md
-          git diff --cached --quiet || git commit -m "docs: update module READMEs"
-          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
+          git add README.md infra/modules/**/README.md
+          git diff --cached --quiet || git commit -m "docs: update all README files"
+          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }} 
