@@ -23,7 +23,7 @@ module "security_group" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.47 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 
 ## Modules
 
