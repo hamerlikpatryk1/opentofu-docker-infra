@@ -34,8 +34,9 @@ jobs:
           sudo mv terraform-docs /usr/local/bin/
 
       - name: Generate docs for root module
+        working-directory: ${{ github.workspace }}
         run: |
-          terraform-docs markdown table --output-file README.md --output-mode file .
+          terraform-docs markdown table --output-file README.md --output-mode inject .
           cat README.md
       
       - name: Sleep 10 seconds
