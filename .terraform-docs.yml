@@ -1,16 +1,9 @@
 formatter: markdown table
 
 output:
-  file: README.md
+  file: ""
   mode: inject
-
-sections:
-  show:
-    - requirements
-    - providers
-    - inputs
-    - outputs
-
-settings:
-  anchor: true
-  color: true
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
