@@ -1,18 +1,4 @@
 output:
   file: ""
   mode: inject
-  template: |-
-    <!-- BEGIN_TF_DOCS -->
-    ## Requirements
-    {{ .Requirements }}
-    ## Providers
-    {{ .Providers }}
-    ## Modules
-    {{ .Modules }}
-    ## Resources
-    {{ .Resources }}
-    ## Inputs
-    {{ .Inputs }}
-    ## Outputs
-    {{ .Outputs }}
-    <!-- END_TF_DOCS -->
+  template: "{{ .Content }}"
