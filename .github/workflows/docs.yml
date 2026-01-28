@@ -34,13 +34,10 @@ jobs:
           sudo mv terraform-docs /usr/local/bin/
 
       - name: Generate docs for root module
-        uses: terraform-docs/gh-actions@v1.3.0
-        with:
-          working-dir: .
-          config-file: .terraform-docs.yml
-          output-file: README.md
-          output-method: inject
-          git-push: false
+        working-directory: ${{ github.workspace }}
+        run: |
+          terraform-docs markdown table --output-file README.md --output-mode inject .
+          cat README.md
       
       - name: Sleep 10 seconds
         run: sleep 10
@@ -48,30 +45,33 @@ jobs:
       - name: Generate docs for VPC module
         working-directory: infra/modules/vpc
         run: |
-          terraform-docs markdown table --config .terraform-docs.yml --output-file README.md --output-mode inject .
+          terraform-docs markdown table --output-file README.md --output-mode inject .
           cat README.md
 
       - name: Generate docs for EC2 module
         working-directory: infra/modules/ec2
         run: |
-          terraform-docs markdown table --config .terraform-docs.yml --output-file README.md --output-mode inject .
+          terraform-docs markdown table --output-file README.md --output-mode inject .
           cat README.md
 
       - name: Generate docs for Security Group module
         working-directory: infra/modules/security_group
         run: |
-          terraform-docs markdown table --config .terraform-docs.yml --output-file README.md --output-mode inject .
+          terraform-docs markdown table --output-file README.md --output-mode inject .
           cat README.md
 
       - name: Sleep 10 seconds
         run: sleep 10
 
-      - name: Commit and push all README updates
+      - name: Commit and push changes
         env:
           IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md infra/modules/**/README.md
-          git diff --cached --quiet || git commit -m "docs: update all README files"
-          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }} 
+
+          git add README.md 
+          git diff --cached --quiet || git commit -m "docs: update root README"
+          git add infra/modules/**/README.md
+          git diff --cached --quiet || git commit -m "docs: update module READMEs"
+          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
