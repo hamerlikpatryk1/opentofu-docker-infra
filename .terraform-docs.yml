@@ -3,5 +3,21 @@ output:
   mode: inject
   template: |-
     <!-- BEGIN_TF_DOCS -->
-    {{ .Content }}
+    ## Requirements
+    {{ .Requirements }}
+
+    ## Providers
+    {{ .Providers }}
+
+    ## Modules
+    {{ .Modules }}
+
+    ## Resources
+    {{ .Resources }}
+
+    ## Inputs
+    {{ .Inputs }}
+
+    ## Outputs
+    {{ .Outputs }}
     <!-- END_TF_DOCS -->
