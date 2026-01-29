@@ -65,6 +65,14 @@ jobs:
             with:
               tofu_version: 1.11.4
 
+          - name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v3
+            with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: eu-north-1
+
+
           - name: Generate tfvars
             run: |
               mkdir -p infra/envs
