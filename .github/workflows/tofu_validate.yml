@@ -66,12 +66,15 @@ jobs:
               tofu_version: 1.11.4
 
           - name: Tofu Init
+            working-directory: .
             run: tofu init -backend=false
 
           - name: Tofu Validate
+            working-directory: .
             run: |
-              tofu plan -var-file="infra/envs/${ENV}.tfvars"
+              tofu validate
 
           - name: Tofu Plan
+            working-directory: .
             run: |
-              tofu plan -var-file="infra/envs/${ENV}.tfvars"
+              tofu plan -var-file="./infra/envs/${ENV}.tfvars"
