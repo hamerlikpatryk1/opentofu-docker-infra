@@ -77,7 +77,7 @@ jobs:
 
           - name: Tofu Init
             working-directory: .
-            run: tofu init -backend=false
+            run: tofu init -backend=true
 
           - name: Tofu Validate
             working-directory: .
