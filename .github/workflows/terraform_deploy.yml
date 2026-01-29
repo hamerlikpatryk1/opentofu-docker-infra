@@ -23,11 +23,11 @@ jobs:
         run: |
           if [[ "${GITHUB_REF##*/}" == "main" ]]; then
             echo "env=prod" >> $GITHUB_OUTPUT
-          elif [[ "${GITHUB_REF##*/}" == "staging" ]]; then
-            echo "env=staging" >> $GITHUB_OUTPUT
-          else
-            echo "env=dev" >> $GITHUB_OUTPUT
-          fi
+          # elif [[ "${GITHUB_REF##*/}" == "staging" ]]; then
+          #   echo "env=staging" >> $GITHUB_OUTPUT
+          # else
+          #   echo "env=dev" >> $GITHUB_OUTPUT
+          # fi
 
   terraform:
     name: Tofu Deploy
