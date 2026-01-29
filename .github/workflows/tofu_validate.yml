@@ -89,10 +89,8 @@ jobs:
 
           - name: Tofu Validate
             working-directory: .
-            run: |
-              tofu validate
+            run: tofu validate
 
           - name: Tofu Plan
             working-directory: .
-            run: |
-              tofu plan -var-file="./infra/envs/${ENV}.tfvars"
+            run: tofu plan -var-file="./infra/envs/${ENV}.tfvars"

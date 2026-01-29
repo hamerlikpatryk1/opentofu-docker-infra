@@ -1,0 +1,40 @@
+name: Tofu Security Scan
+
+on:
+  push:
+    branches:
+      - main
+      - IaCTofu
+    paths:
+      - "**/*.tf"
+      - "infra/**"
+  workflow_dispatch:
+
+jobs:
+  tofu-security:
+    name: Tofu Validate & Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.11.4
+
+      - name: Tofu init
+        run: tofu init -backend=true
+
+      - name: Tofu Validate
+        working-directory: .
+        run: tofu validate
+
+      - name: Trivy config scan (Tofu / Terraform)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: 0
