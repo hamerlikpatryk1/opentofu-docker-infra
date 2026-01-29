@@ -66,7 +66,7 @@ jobs:
       - name: Show generated tfvars
         run: cat infra/envs/${ENV}.tfvars
 
-      # UNCOMMENT FOR ACTUAL DEPLOYMENT!!!! COMMENTED ONLY TO NOT LOST REASOURCE DURING TESTING
+      
 
       - name: Tofu Init
         run: tofu init
@@ -79,7 +79,8 @@ jobs:
         run: |
           tofu plan -var-file="infra/envs/${ENV}.tfvars"
 
-      - name: Tofu Apply
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
-        run: |
-          tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
+      # UNCOMMENT FOR ACTUAL DEPLOYMENT!!!! COMMENTED ONLY TO NOT LOST REASOURCE DURING TESTING
+      # - name: Tofu Apply
+      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
+      #   run: |
+      #     tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
