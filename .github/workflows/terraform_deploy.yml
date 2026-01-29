@@ -64,23 +64,22 @@ jobs:
           EOF
 
       - name: Show generated tfvars
-        run: |
-          cat infra/envs/${ENV}.tfvars
+        run: cat infra/envs/${ENV}.tfvars
 
       # UNCOMMENT FOR ACTUAL DEPLOYMENT!!!! COMMENTED ONLY TO NOT LOST REASOURCE DURING TESTING
 
-      # - name: Tofu Init
-      #   run: tofu init
+      - name: Tofu Init
+        run: tofu init
 
-      # - name: Tofu Workspace
-      #   run: |
-      #     tofu workspace select -or-create ${ENV}
+      - name: Tofu Workspace
+        run: |
+          tofu workspace select -or-create ${ENV}
 
-      # - name: Tofu Plan
-      #   run: |
-      #     tofu plan -var-file="infra/envs/${ENV}.tfvars"
+      - name: Tofu Plan
+        run: |
+          tofu plan -var-file="infra/envs/${ENV}.tfvars"
 
-      # - name: Tofu Apply
-      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
-      #   run: |
-      #     tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
+      - name: Tofu Apply
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
+        run: |
+          tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
