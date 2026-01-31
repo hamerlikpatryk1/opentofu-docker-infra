@@ -117,16 +117,16 @@ tofu apply -var-file="infra/envs/dev.tfvars"
 This project supports three environments with separate state management:
 
 ### Development (dev)
-*Minimal resources for testing
-*Configuration: infra/envs/dev.tfvars
+* Minimal resources for testing
+* Configuration: infra/envs/dev.tfvars
 
 ### Staging (staging)
-*Production-like setup for validation
-*Configuration: infra/envs/staging.tfvars
+* Production-like setup for validation
+* Configuration: infra/envs/staging.tfvars
 
 ### Production (prod)
-*Full production deployment
-*Cnfiguration: infra/envs/prod.tfvars
+* Full production deployment
+* Cnfiguration: infra/envs/prod.tfvars
 
 ### Switch between environments:
 ```bash
@@ -145,13 +145,13 @@ cd docker
 docker-compose up -d
 ```
 ### Access Services
-*Prometheus: http://localhost:9090
-*Grafana: http://localhost:3000 (default: admin/admin)
-*Web Application: http://localhost:3000
+* Prometheus: http://localhost:9090
+* Grafana: http://localhost:3000 (default: admin/admin)
+* Web Application: http://localhost:3000
 
 ### Configuration Files
-*docker/prometheus/prometheus.yml - Prometheus scrape configs
-*docker/grafana/provisioning/ - Grafana dashboards and datasources
+* docker/prometheus/prometheus.yml - Prometheus scrape configs
+* docker/grafana/provisioning/ - Grafana dashboards and datasources
 
 ---
 
@@ -159,12 +159,12 @@ docker-compose up -d
 Automated workflows run on every push and pull request:
 
 ### Workflows
-*tofu_validate.yml - Syntax and format validation
-*tofu_scan.yml - Security scanning (Tfsec, Checkov)
-*tofu_deploy.yml - Infrastructure deployment
-*docker_build.yml - Docker image build
-*docker_scans.yml - Container security scanning
-*docs.yml - Auto-generated documentation
+* tofu_validate.yml - Syntax and format validation
+* tofu_scan.yml - Security scanning (Tfsec, Checkov)
+* tofu_deploy.yml - Infrastructure deployment
+* docker_build.yml - Docker image build
+* docker_scans.yml - Container security scanning
+* docs.yml - Auto-generated documentation
 
 ---
 
@@ -181,19 +181,19 @@ Test file: tests/infra_test.go
 ## Modules
 
 VPC Module
-*Location: infra/modules/vpc
-*Manages Virtual Private Cloud setup
-*Documentation
+* Location: infra/modules/vpc
+* Manages Virtual Private Cloud setup
+* Documentation
 
 Security Group Module
-*Location: infra/modules/security_group
-*Configures security group rules
-*Documentation
+* Location: infra/modules/security_group
+* Configures security group rules
+* Documentation
 
 EC2 Module
-*Location: infra/modules/ec2
-*Manages EC2 instances
-*Documentation
+* Location: infra/modules/ec2
+* Manages EC2 instances
+* Documentation
 
 ## Common Commands
 ```bash
@@ -222,10 +222,10 @@ tofu output
 ---
 
 ## Security
-*All infrastructure is scanned with Trivy
-*Docker images are scanned in the CI/CD pipeline
-*Secrets are managed via GitHub Actions secrets
-*State files are protected and backed up
+* All infrastructure is scanned with Trivy
+* Docker images are scanned in the CI/CD pipeline
+* Secrets are managed via GitHub Actions secrets
+* State files are protected and backed up
 
 ---
 
