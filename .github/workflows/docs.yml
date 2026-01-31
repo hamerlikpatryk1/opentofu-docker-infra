@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - staging
       - IaCTofu
     paths-ignore:
       - "README.md"

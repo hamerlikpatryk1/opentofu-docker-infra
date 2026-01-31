@@ -2,31 +2,21 @@ name: Tofu Deploy
 
 on:
   workflow_dispatch:
-      inputs:
-        environment:
-          description: "Environment to validate"
-          required: true
-          default: dev
-          type: choice
-          options:
-            - dev
-            - staging
-            - prod
-  push:
+
+  pull_request:
+    types: [closed]
     branches:
       - main
+      - staging
       - IaCTofu
-    paths:
-      - "**/*.tf"
-      - "infra/**"  
-    paths-ignore:
-      - "infra/modules/**/README.md"
-
 
 jobs:
-  determine-env:
+  determine-env:  
     name: Determine environment
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.merged == true
     outputs:
       env: ${{ steps.setenv.outputs.env }}
 
@@ -34,10 +24,17 @@ jobs:
       - name: Determine environment
         id: setenv
         run: |
-          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+          echo "Event: ${{ github.event_name }}"
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "env=dev" >> $GITHUB_OUTPUT
+
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
             echo "env=prod" >> $GITHUB_OUTPUT
-          elif [[ "${GITHUB_REF##*/}" == "staging" ]]; then
+
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "IaCTofu" ]]; then
             echo "env=staging" >> $GITHUB_OUTPUT
+
           else
             echo "env=dev" >> $GITHUB_OUTPUT
           fi
@@ -79,8 +76,6 @@ jobs:
       - name: Show generated tfvars
         run: cat infra/envs/${ENV}.tfvars
 
-      
-
       - name: Tofu Init
         run: tofu init
 
@@ -92,8 +87,7 @@ jobs:
         run: |
           tofu plan -var-file="infra/envs/${ENV}.tfvars"
 
-      # UNCOMMENT FOR ACTUAL DEPLOYMENT!!!! COMMENTED ONLY TO NOT LOST REASOURCE DURING TESTING
-      # - name: Tofu Apply
-      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
-      #   run: |
-      #     tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
+      - name: Tofu Apply
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
+        run: |
+          tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
