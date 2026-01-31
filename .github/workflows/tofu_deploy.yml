@@ -32,7 +32,7 @@ jobs:
           elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
             echo "env=prod" >> $GITHUB_OUTPUT
 
-          elif [[ "${{ github.event.pull_request.base.ref }}" == "IaCTofu" ]]; then
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "staging" ]]; then
             echo "env=staging" >> $GITHUB_OUTPUT
 
           else
