@@ -9,16 +9,16 @@ on:
       - main
       - staging
       - IaCTofu
-  push:
-    branches:
-      - main
-      - staging
-      - IaCTofu
-    paths:
-      - "**/*.tf"
-      - "infra/**"
-    paths-ignore:
-      - "infra/modules/**/README.md"
+  push: #test
+    branches: #test
+      - main #test
+      - staging #test
+      - IaCTofu #test
+    paths: #test
+      - "**/*.tf" #test
+      - "infra/**" #test
+    paths-ignore: #test
+      - "infra/modules/**/README.md" #test
 
 jobs:
   determine-env:  
