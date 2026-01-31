@@ -94,19 +94,58 @@ cd opentofu-docker-infra
 export AWS_ACCESS_KEY_ID="your-access-key"
 export AWS_SECRET_ACCESS_KEY="your-secret-key"
 ```
-3. Initialize OpenTofu
+3. Configure GH secrets:
+   * Go to your GitHub repo → Settings → Secrets and variables → Actions
+   * Click New repository secret ( Only TFVARS is Environment secret! - create one for dev, staging, prod)
+   * Add each secret with its value
+     
+     1. IAC_TOKEN - Personal Access Token for pushing documentation updates
+        * Go to GitHub Settings → Developer settings → Personal access tokens
+        * Create token with repo and workflow scopes
+        * Add to repository secrets as IAC_TOKEN
+     2. AWS_ACCESS_KEY_ID - AWS IAM user access key
+        * Used in tofu_deploy.yml and other AWS operations
+        * Create IAM user with appropriate permissions:
+          ```bash
+          AmazonEC2FullAccess
+          AmazonSSMReadOnlyAccess
+	        AmazonVPCFullAccess
+          IAMUserChangePassword
+          ```
+      3. AWS_SECRET_ACCESS_KEY - AWS IAM user secret key
+         Used alongside AWS_ACCESS_KEY_ID
+      4. TFVARS - Sensitive Terraform variables
+         * Used in tofu_deploy.yml to generate environment-specific tfvars
+         * Should contain sensitive values (DB passwords, API keys, etc.) that shouldn't be in git
+         * Format: variable_name = "value" (multiline)
+         * Example TFVARS secret:
+           ```bash
+           instance_type = "t3.micro"
+           vpc_cidr = "10.0.0.0/16"
+           public_subnet_cidr = "10.0.1.0/24"
+           ```
+4. Initialize OpenTofu
 ```bash
 tofu init
 ```
-4. Select Environment
+5. Setup Environment Variables
+   Copy the example tfvars file for your desired environment: (if they haven't been created before)
+```bash
+cp infra/envs/dev.tfvars.example infra/envs/dev.tfvars
+cp infra/envs/staging.tfvars.example infra/envs/staging.tfvars
+cp infra/envs/prod.tfvars.example infra/envs/prod.tfvars
+```
+Then edit the copied file with your specific values
+
+6. Select Environment
 ```bash
 tofu workspace select dev   # or staging/prod
 ```
-5. Plan Infrastructure
+7. Plan Infrastructure
 ```bash
 tofu plan -var-file="infra/envs/dev.tfvars"
 ```
-6. Apply Changes
+8. Apply Changes
 ```bash
 tofu apply -var-file="infra/envs/dev.tfvars"
 ```
@@ -160,7 +199,7 @@ Automated workflows run on every push and pull request:
 
 ### Workflows
 * tofu_validate.yml - Syntax and format validation
-* tofu_scan.yml - Security scanning (Tfsec, Checkov)
+* tofu_scan.yml - Security scanning (Trivy)
 * tofu_deploy.yml - Infrastructure deployment
 * docker_build.yml - Docker image build
 * docker_scans.yml - Container security scanning
@@ -215,8 +254,6 @@ tofu validate
 # Generate documentation
 terraform-docs markdown . > docs/MODULES.md
 
-# Show outputs
-tofu output
 ```
 
 ---
@@ -236,38 +273,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Author
 Created by hamerlikpatryk1
-
-
----
-##Docker Build
-
-To build the image locally:
-
-docker build -t app:latest ./docker/web
-
-To build full stack
-
-docker-compose -f ./docker/docker-compose.yml up -d
-
-To stop stack
-
-docker-compose -f docker/docker-compose.yml down
-
-##Monitoring
-
-The stack includes Prometheus and Grafana.
-##Prometheus
-
-    Port: 9090
-    Configuration in docker/prometheus/prometheus.yml
-    Data collected from the web container (endpoint /metrics)
-
-##Grafana
-
-    Port: 3000
-    Provisioning:
-        Dashboards: docker/grafana/provisioning/dashboards/
-        Datasource: docker/grafana/provisioning/datasource/
-    Data from Prometheus
-    Default login/password: admin/admin (change in prod!)
-
