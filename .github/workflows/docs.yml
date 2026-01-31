@@ -12,7 +12,6 @@ on:
       - "infra/modules/**"
       - "!README.md"
       - "!infra/modules/**/README.md"
-  pull_request:
 
 jobs:
   terraform-docs:

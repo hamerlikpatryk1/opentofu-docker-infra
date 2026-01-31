@@ -1,6 +1,6 @@
 # App Docker Image
 
-![Docker Build](https://github.com/hamerlikpatryk1/opentofu-docker-infra/actions/workflows/build_docker.yml/badge.svg)
+![Docker Build](https://github.com/hamerlikpatryk1/opentofu-docker-infra/actions/workflows/docker_build.yml/badge.svg)
 
 ## Description
 
