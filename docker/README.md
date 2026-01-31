@@ -26,6 +26,17 @@ To build the image locally:
 docker build -t app:latest ./docker/web
 
 ```
+
+To build full stack 
+
+```bash
+docker-compose -f ./docker/docker-compose.yml up -d
+```
+To stop stack
+
+```bash
+docker-compose -f docker/docker-compose.yml down
+```
 ## Monitoring
 
 The stack includes Prometheus and Grafana.
