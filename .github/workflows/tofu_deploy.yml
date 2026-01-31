@@ -9,15 +9,6 @@ on:
       - main
       - staging
       - IaCTofu
-  push: #test
-    branches: #test
-      - main #test
-      - staging #test
-      - IaCTofu #test
-    paths: #test
-      - "**/*.tf" #test
-      - "infra/**" #test
-      - "!infra/modules/**/README.md" #test
 
 jobs:
   determine-env:  
