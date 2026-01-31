@@ -109,7 +109,7 @@ export AWS_SECRET_ACCESS_KEY="your-secret-key"
           ```bash
           AmazonEC2FullAccess
           AmazonSSMReadOnlyAccess
-	        AmazonVPCFullAccess
+	      AmazonVPCFullAccess
           IAMUserChangePassword
           ```
       3. AWS_SECRET_ACCESS_KEY - AWS IAM user secret key
