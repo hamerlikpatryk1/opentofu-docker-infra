@@ -1,13 +1,17 @@
 name: Generate Terraform Docs
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+      - staging
       - IaCTofu
-    paths-ignore:
-      - "README.md"
-      - "infra/modules/**/README.md"
+    paths:
+      - "**/*.tf"
+      - "infra/modules/**"
+      - "!README.md"
+      - "!infra/modules/**/README.md"
   pull_request:
 
 jobs:
@@ -32,25 +36,31 @@ jobs:
           curl -sL https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz | tar -xz
           sudo mv terraform-docs /usr/local/bin/
 
-      - name: Generate docs for root module
+      - name: Generate docs for VPC module
+        working-directory: infra/modules/vpc
         run: |
-          terraform-docs markdown table . --output-file README.md --output-mode inject
+          terraform-docs markdown table --output-file README.md --output-mode inject .
+          cat README.md
 
-      - name: Generate docs for modules
+      - name: Generate docs for EC2 module
+        working-directory: infra/modules/ec2
         run: |
-          terraform-docs markdown table ./infra/modules/vpc --output-file ./README.md --output-mode inject
-          terraform-docs markdown table ./infra/modules/ec2 --output-file ./README.md --output-mode inject
-          terraform-docs markdown table ./infra/modules/security_group --output-file ./README.md --output-mode inject
+          terraform-docs markdown table --output-file README.md --output-mode inject .
+          cat README.md
+
+      - name: Generate docs for Security Group module
+        working-directory: infra/modules/security_group
+        run: |
+          terraform-docs markdown table --output-file README.md --output-mode inject .
+          cat README.md
 
       - name: Commit and push changes
         env:
           IAC_TOKEN: ${{ secrets.IAC_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git diff --quiet -- README.md infra/modules/**/README.md || (
-            git add README.md infra/modules/**/README.md
-            git commit -m "docs: update terraform docs"
-            git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
-          )
+          git add infra/modules/**/README.md
+          git diff --cached --quiet || git commit -m "docs: update module READMEs"
+          git push https://x-access-token:${IAC_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}

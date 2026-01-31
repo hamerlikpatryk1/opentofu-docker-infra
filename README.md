@@ -230,6 +230,8 @@ No resources.
 | Name | Description |
 |------|-------------|
 | <a name="output_ec2_public_ip"></a> [ec2\_public\_ip](#output\_ec2\_public\_ip) | n/a |
+| <a name="output_public_subnet_id"></a> [public\_subnet\_id](#output\_public\_subnet\_id) | n/a |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | n/a |
 <!-- END_TF_DOCS -->
 

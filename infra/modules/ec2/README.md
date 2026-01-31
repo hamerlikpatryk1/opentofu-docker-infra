@@ -12,6 +12,7 @@ module "ec2" {
   subnet_id         = module.vpc.public_subnet_id
   security_group_id = module.security_group.security_group_id
 }
+```
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -24,7 +25,7 @@ module "ec2" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.47 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 
 ## Modules
 

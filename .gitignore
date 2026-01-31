@@ -13,6 +13,7 @@ crash.*.log
 # password, private keys, and other secrets. These should not be part of version 
 # control as they are data points which are potentially sensitive and subject 
 # to change depending on the environment.
+.env
 *.tfvars
 *.tfvars.json
 
@@ -35,3 +36,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+
+node_modules
