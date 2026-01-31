@@ -7,9 +7,11 @@ on:
       - main
       - staging
       - IaCTofu
-    paths-ignore:
-      - "README.md"
-      - "infra/modules/**/README.md"
+    paths:
+      - "**/*.tf"
+      - "infra/modules/**"
+      - "!README.md"
+      - "!infra/modules/**/README.md"
   pull_request:
 
 jobs:
