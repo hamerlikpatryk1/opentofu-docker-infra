@@ -1,6 +1,6 @@
 # App Docker Image
 
-![Docker Build](https://github.com/<user>/<repo>/actions/workflows/build-docker.yml/badge.svg)
+![Docker Build](https://github.com/hamerlikpatryk1/opentofu-docker-infra/actions/workflows/build_docker.yml/badge.svg)
 
 ## Description
 
@@ -11,7 +11,7 @@ It supports the following environments: `dev`, `staging`, `prod`.
 
 ## Table of Contents
 
-- [Build](# build)
+- [Build](#build)
 - [Monitoring](#monitoring)
   - [Prometheus](#prometheus)
   - [Grafana](#grafana)
