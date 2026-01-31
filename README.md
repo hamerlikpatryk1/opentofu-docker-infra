@@ -20,8 +20,10 @@ A comprehensive Infrastructure as Code demo using OpenTofu and Docker Compose wi
 - [CI/CD Pipeline](#)
 - [Testing](#)
 - [License](#)
+  
 ---
-##Overview
+
+## Overview
 
 This project demonstrates best practices for Infrastructure as Code by:
 
@@ -32,9 +34,12 @@ Automated CI/CD with GitHub Actions
 Infrastructure scanning and validation
 Automated documentation generation with Terradocs
 Comprehensive testing with Terratest in Go
----
-##Project Structure
 
+---
+
+## Project Structure
+
+```bash
 .
 ├── infra/                          # OpenTofu/Terraform code
 │   ├── envs/                       # Environment variables
@@ -63,16 +68,21 @@ Comprehensive testing with Terratest in Go
 ├── variables.tf                    # Input variables
 ├── outputs.tf                      # Output values
 └── versions.tf                     # Version constraints
+```
+
 ---
-##Prerequisites
+
+## Prerequisites
 OpenTofu >= 1.6.0
 Terraform CLI (for compatibility)
 Docker & Docker Compose
 Go >= 1.19 (for testing)
 AWS Account with appropriate credentials
 kubectl (for Kubernetes operations, if applicable)
+
 ---
-##Quick Start
+
+## Quick Start
 
 1. Clone the Repository
 ```bash
@@ -100,27 +110,33 @@ tofu plan -var-file="infra/envs/dev.tfvars"
 ```bash
 tofu apply -var-file="infra/envs/dev.tfvars"
 ```
-##Environments
+
+---
+
+## Environments
 This project supports three environments with separate state management:
 
-###Development (dev)
+### Development (dev)
 *Minimal resources for testing
 *Configuration: infra/envs/dev.tfvars
 
-###Staging (staging)
+### Staging (staging)
 *Production-like setup for validation
 *Configuration: infra/envs/staging.tfvars
 
-###Production (prod)
+### Production (prod)
 *Full production deployment
 *Cnfiguration: infra/envs/prod.tfvars
 
-###Switch between environments:
+### Switch between environments:
 ```bash
 tofu workspace list
 tofu workspace select <environment>
 ```
-##Monitoring
+
+---
+
+## Monitoring
 The project includes a complete monitoring stack with Docker Compose:
 
 Start Monitoring Stack
@@ -128,24 +144,29 @@ Start Monitoring Stack
 cd docker
 docker-compose up -d
 ```
-Access Services
+### Access Services
 *Prometheus: http://localhost:9090
 *Grafana: http://localhost:3000 (default: admin/admin)
 *Web Application: http://localhost:3000
-Configuration Files
+
+### Configuration Files
 *docker/prometheus/prometheus.yml - Prometheus scrape configs
 *docker/grafana/provisioning/ - Grafana dashboards and datasources
 
-##CI/CD Pipeline
+---
+
+## CI/CD Pipeline
 Automated workflows run on every push and pull request:
 
-Workflows
+### Workflows
 *tofu_validate.yml - Syntax and format validation
 *tofu_scan.yml - Security scanning (Tfsec, Checkov)
 *tofu_deploy.yml - Infrastructure deployment
 *docker_build.yml - Docker image build
 *docker_scans.yml - Container security scanning
 *docs.yml - Auto-generated documentation
+
+---
 
 ## Testing
 Run infrastructure tests with Go:
@@ -154,6 +175,8 @@ cd tests
 go test -v
 ```
 Test file: tests/infra_test.go
+
+---
 
 ## Modules
 
@@ -195,13 +218,21 @@ terraform-docs markdown . > docs/MODULES.md
 # Show outputs
 tofu output
 ```
+
+---
+
 ## Security
 *All infrastructure is scanned with Trivy
 *Docker images are scanned in the CI/CD pipeline
 *Secrets are managed via GitHub Actions secrets
 *State files are protected and backed up
+
+---
+
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
 
 ## Author
 Created by hamerlikpatryk1
