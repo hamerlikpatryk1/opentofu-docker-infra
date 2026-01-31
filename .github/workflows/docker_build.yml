@@ -9,8 +9,7 @@ on:
       - IaCTofu
     paths:
       - 'docker/web/**'
-    paths-ignore:
-      - "docker/web/README.md"
+      - "!docker/web/README.md"
     
 
 jobs:

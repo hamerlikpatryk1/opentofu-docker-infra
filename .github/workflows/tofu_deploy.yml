@@ -17,8 +17,7 @@ on:
     paths: #test
       - "**/*.tf" #test
       - "infra/**" #test
-    paths-ignore: #test
-      - "infra/modules/**/README.md" #test
+      - "!infra/modules/**/README.md" #test
 
 jobs:
   determine-env:  

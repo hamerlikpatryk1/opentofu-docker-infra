@@ -20,8 +20,7 @@ on:
     paths:
       - "**/*.tf"
       - "infra/**"
-    paths-ignore:
-      - "infra/modules/**/README.md"
+      - "!infra/modules/**/README.md"
 
 jobs:
   tofu-security:
