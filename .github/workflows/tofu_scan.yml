@@ -1,6 +1,17 @@
 name: Tofu Security Scan
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to validate"
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
   push:
     branches:
       - main
@@ -8,7 +19,6 @@ on:
     paths:
       - "**/*.tf"
       - "infra/**"
-  workflow_dispatch:
 
 jobs:
   tofu-security:

@@ -6,6 +6,11 @@ on:
     branches:
       - main
       - IaCTofu
+    paths:
+      - 'docker/web/**'
+    paths-ignore:
+      - "docker/web/README.md"
+    
 
 jobs:
   build-docker:

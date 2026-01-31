@@ -3,8 +3,14 @@ name: Docker Build & Scan
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
+      - IaCTofu
     paths:
       - 'docker/web/**'
+    paths-ignore:
+      - "docker/web/README.md"
+      
 jobs:
   docker-scan:
     runs-on: ubuntu-latest

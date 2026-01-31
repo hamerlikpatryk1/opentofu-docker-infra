@@ -1,14 +1,27 @@
-name: Terraform Deploy
+name: Tofu Deploy
 
 on:
+  workflow_dispatch:
+      inputs:
+        environment:
+          description: "Environment to validate"
+          required: true
+          default: dev
+          type: choice
+          options:
+            - dev
+            - staging
+            - prod
   push:
     branches:
       - main
       - IaCTofu
+    paths:
+      - "**/*.tf"
+      - "infra/**"  
     paths-ignore:
-      - "README.md"
       - "infra/modules/**/README.md"
-  pull_request:
+
 
 jobs:
   determine-env:
