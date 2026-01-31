@@ -87,7 +87,8 @@ jobs:
         run: |
           tofu plan -var-file="infra/envs/${ENV}.tfvars"
 
-      - name: Tofu Apply
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
-        run: |
-          tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
+      #   Tofu code should be deployable but don't actually run terraform apply
+      # - name: Tofu Apply
+      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
+      #   run: |
+      #     tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
