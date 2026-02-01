@@ -1,5 +1,5 @@
 resource "aws_security_group" "this" {
-  name        = "ec2_sg"
+  name        = "${var.environment}-ec2-sg"
   description = "Allow Docker services and outbound internet (SSH via Systems Manager)"
   vpc_id      = var.vpc_id
 
