@@ -73,9 +73,6 @@ jobs:
           ${{ secrets.TFVARS }}
           EOF
 
-      - name: Show generated tfvars
-        run: cat infra/envs/${ENV}.tfvars
-
       - name: Tofu Init
         run: tofu init
 
