@@ -108,7 +108,7 @@ export AWS_SECRET_ACCESS_KEY="your-secret-key"
         * Create IAM user with appropriate permissions:
           ```bash
           AmazonEC2FullAccess
-          AmazonSSMReadOnlyAccess
+          AmazonSSMFullAccess
 	      AmazonVPCFullAccess
           IAMUserChangePassword
           ```

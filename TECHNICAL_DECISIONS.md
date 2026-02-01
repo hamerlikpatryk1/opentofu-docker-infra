@@ -28,15 +28,20 @@
      - GDPR-compliant data handling
    - **Trade-offs**: May have higher latency for non-EU users
 
-### 4. **Compute: EC2 t3.micro Instance**
-   - **Decision**: Use t3.micro for development/staging environments
+### 4. **Compute: EC2 t3.micro Instance with Systems Manager Access**
+   - **Decision**: Use t3.micro with IAM role for Systems Manager Session Manager
    - **Rationale**:
      - AWS free tier eligible (1 year)
      - Sufficient for development and testing
      - Cost-effective (~$7-10/month after free tier)
      - ARM-based Graviton processors available as alternative
+     - Systems Manager provides secure access without SSH port exposure
+   - **IAM Requirements**:
+     - IAM role with trust relationship to EC2 service
+     - AmazonSSMManagedInstanceCore policy attached
+     - Instance profile for attaching role to instance
    - **Trade-offs**: Limited performance for production workloads
-   - **Recommendation**: Use t3.small or larger for production
+   - **Recommendation**: Use t3.small or larger for production with equivalent IAM setup
 
 ### 5. **Container Orchestration: Docker Compose**
    - **Decision**: Docker Compose instead of Kubernetes/ECS
@@ -126,19 +131,24 @@
      - Implement strict Security Group rules
      - Use private endpoints for AWS services
 
-### 11. **Security Group: Permissive Rules**
-   - **Decision**: Open ports for all services
+### 11. **Security Group: Restrictive Rules**
+   - **Decision**: Only expose application and monitoring ports; databases are internal
    - **Rationale**:
-     - Development ease
-     - Direct access to monitoring and databases
-   - **Trade-offs**: 
-     - Exposes internal services to internet
-     - High security risk
+     - Production-ready security posture
+     - Databases accessed only via localhost by application
+     - SSH access via AWS Systems Manager Session Manager 
+   - **Ports Exposed**:
+     - 8080 - Node.js Web Application
+     - 9090 - Prometheus Monitoring
+     - 3000 - Grafana Dashboards
+   - **Access Method**:
+     - SSH via Systems Manager Session Manager 
+     - Requires IAM role with AmazonSSMManagedInstanceCore policy
+   - **Trade-offs**: None - this is best practice
    - **Recommendation for Production**:
-     - Restrict to application ports only (8080)
-     - Use bastion host for database access
-     - Implement WAF for HTTP traffic
+     - Add WAF for HTTP/HTTPS traffic
      - Enable VPC Flow Logs for monitoring
+     - Consider private subnets for additional isolation
 
 ### 12. **CI/CD: GitHub Actions**
    - **Decision**: GitHub Actions for automation
