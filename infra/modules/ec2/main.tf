@@ -35,4 +35,11 @@ resource "aws_instance" "this" {
   subnet_id            = var.subnet_id
   vpc_security_group_ids = [var.security_group_id]
   iam_instance_profile = aws_iam_instance_profile.ec2_ssm_profile.name
+
+  root_block_device {
+    volume_type           = "gp3"
+    volume_size           = 30
+    delete_on_termination = false
+    encrypted             = true
+  }
 }

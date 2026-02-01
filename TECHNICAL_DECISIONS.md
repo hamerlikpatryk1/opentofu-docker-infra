@@ -57,46 +57,59 @@
    - **Recommendation**: Migrate to ECS/Kubernetes for production multi-instance deployments
 
 ### 6. **Database: PostgreSQL 15**
-   - **Decision**: PostgreSQL in Docker container
+   - **Decision**: PostgreSQL in Docker container with persistent volumes
    - **Rationale**:
      - Powerful open-source relational database
      - ACID compliance for data integrity
      - Version 15 latest stable release
      - Great ecosystem and tools
+   - **Persistence**:
+     - Docker named volume `postgres_data` mapped to `/var/lib/postgresql/data`
+     - Data persists across container restarts
+     - Health check ensures database readiness
    - **Trade-offs**: 
-     - Running in container means data loss on EC2 termination (no persistent volumes configured)
-     - No built-in backups
+     - Data lost if EC2 instance terminates (not AWS-managed)
+     - No automated backups configured
    - **Recommendation for Production**:
-     - Use AWS RDS PostgreSQL for managed backups
-     - Configure EBS volumes for persistent data
-     - Enable automated backups
+     - Use AWS RDS PostgreSQL for managed backups and automated failover
+     - Configure EBS snapshots for backup strategy
+     - Enable Point-in-Time Recovery (PITR)
 
 ### 7. **Caching: Redis 7**
-   - **Decision**: Redis for session/cache layer
+   - **Decision**: Redis for session/cache layer with AOF persistence
    - **Rationale**:
      - High-performance in-memory data store
      - Session management for web application
      - Pub/Sub capabilities for real-time features
      - Version 7 includes function scripting
+   - **Persistence**:
+     - Append-Only File (AOF) persistence enabled (`--appendonly yes`)
+     - Docker named volume `redis_data` mapped to `/data`
+     - Survives container restarts
    - **Trade-offs**: 
-     - No persistence configured (data lost on restart)
-     - Single instance (no replication)
+     - AOF can be slower than RDB for high-throughput scenarios
+     - Single instance (no replication for HA)
+     - Data lost if EC2 instance terminates
    - **Recommendation for Production**:
-     - Enable RDB/AOF persistence
-     - Use AWS ElastiCache for managed Redis
-     - Enable replication for HA
+     - Use AWS ElastiCache for managed Redis with automatic failover
+     - Enable replication and multi-AZ for high availability
+     - Configure automated backups and snapshots
 
 ### 8. **Monitoring Stack: Prometheus + Grafana**
-   - **Decision**: Prometheus for metrics, Grafana for visualization
+   - **Decision**: Prometheus for metrics, Grafana for visualization with persistent volumes
    - **Rationale**:
      - Industry-standard open-source monitoring
      - Pull-based metrics collection (efficient)
      - Time-series data optimized for historical analysis
      - Rich dashboard capabilities in Grafana
+   - **Persistence**:
+     - Grafana dashboard data stored in Docker named volume `grafana_data`
+     - Dashboards and provisioning preserved across restarts
+     - Prometheus metrics: in-memory with optional WAL persistence
    - **Trade-offs**: 
      - Single-instance Prometheus (no HA)
      - No built-in alerting (would need Alertmanager)
-     - Data loss on container restart
+     - Metrics data lost on container restart if WAL not enabled
    - **Recommendation for Production**:
      - Add Prometheus Alertmanager for alerting
      - Use persistent volumes for metrics storage
