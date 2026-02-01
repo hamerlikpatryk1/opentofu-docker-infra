@@ -1,4 +1,3 @@
-
 ## Technical Decisions
 
 ### 1. **Infrastructure as Code Framework: OpenTofu**
@@ -76,24 +75,21 @@
      - Enable Point-in-Time Recovery (PITR)
 
 ### 7. **Caching: Redis 7**
-   - **Decision**: Redis for session/cache layer with AOF persistence
+   - **Decision**: Redis for session/cache layer (ephemeral)
    - **Rationale**:
      - High-performance in-memory data store
      - Session management for web application
      - Pub/Sub capabilities for real-time features
      - Version 7 includes function scripting
    - **Persistence**:
-     - Append-Only File (AOF) persistence enabled (`--appendonly yes`)
-     - Docker named volume `redis_data` mapped to `/data`
-     - Survives container restarts
+     - No persistence configured (ephemeral cache)
+     - Data lost on container or EC2 restart
    - **Trade-offs**: 
-     - AOF can be slower than RDB for high-throughput scenarios
      - Single instance (no replication for HA)
-     - Data lost if EC2 instance terminates
    - **Recommendation for Production**:
      - Use AWS ElastiCache for managed Redis with automatic failover
      - Enable replication and multi-AZ for high availability
-     - Configure automated backups and snapshots
+     - Configure automated backups and snapshots if persistence is needed
 
 ### 8. **Monitoring Stack: Prometheus + Grafana**
    - **Decision**: Prometheus for metrics, Grafana for visualization with persistent volumes

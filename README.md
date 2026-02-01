@@ -153,7 +153,8 @@ tofu apply -var-file="infra/envs/dev.tfvars"
 ---
 
 ## Environments
-This project supports three environments with separate state management:
+Each environment (dev, staging, prod) uses a separate OpenTofu workspace. 
+Resource names are automatically unique thanks to the `terraform.workspace` variable.:
 
 ### Development (dev)
 * Minimal resources for testing
