@@ -35,6 +35,9 @@ No modules.
 
 | Name | Type |
 |------|------|
+| aws_iam_instance_profile.ec2_ssm_profile | resource |
+| aws_iam_role.ec2_ssm_role | resource |
+| aws_iam_role_policy_attachment.ec2_ssm_policy | resource |
 | aws_instance.this | resource |
 | aws_ssm_parameter.ecs_ami | data source |
 
