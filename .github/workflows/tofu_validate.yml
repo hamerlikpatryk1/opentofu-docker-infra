@@ -1,0 +1,94 @@
+name: Tofu Validate & Plan
+
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to validate"
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+  pull_request:
+  push:
+    branches:
+      - main
+      - staging
+      - IaCTofu
+    paths:
+      - "**/*.tf"
+      - "infra/**"
+      - "!infra/modules/**/README.md"
+
+jobs:
+    determine-env:
+        name: Determine environment
+        runs-on: ubuntu-latest
+        outputs:
+            env: ${{ steps.setenv.outputs.env }}
+
+        steps:
+          - name: Determine environment
+            id: setenv
+            run: |
+              if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                echo "ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+              else
+                if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+                  echo "env=prod" >> $GITHUB_OUTPUT
+                elif [[ "${GITHUB_REF##*/}" == "staging" ]]; then
+                  echo "env=staging" >> $GITHUB_OUTPUT
+                else
+                  echo "env=dev" >> $GITHUB_OUTPUT
+                fi
+              fi
+    
+    terraform:
+        name: Tofu Validate & Plan
+        needs: determine-env
+        runs-on: ubuntu-latest
+
+        environment: ${{ needs.determine-env.outputs.env }}
+
+        env:
+            TF_IN_AUTOMATION: "true"
+            ENV: ${{ needs.determine-env.outputs.env }}
+
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+
+          - name: Setup Tofu
+            uses: opentofu/setup-opentofu@v1
+            with:
+              tofu_version: 1.11.4
+
+          - name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v3
+            with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: eu-north-1
+
+          - name: Generate tfvars
+            run: |
+              mkdir -p infra/envs
+              cat <<'EOF' > infra/envs/${ENV}.tfvars
+              ${{ secrets.TFVARS }}
+              EOF
+
+          - name: Tofu Init
+            working-directory: .
+            run: tofu init -backend=true
+
+          - name: Tofu Validate
+            working-directory: .
+            run: tofu validate
+
+          - name: Tofu Plan
+            working-directory: .
+            run: tofu plan -var-file="./infra/envs/${ENV}.tfvars"

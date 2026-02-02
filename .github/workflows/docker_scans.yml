@@ -1,0 +1,37 @@
+name: Docker Build & Scan
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - staging
+      - IaCTofu
+    paths:
+      - 'docker/web/**'
+      - "!docker/web/README.md"
+            
+jobs:
+  docker-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v2.1.0
+        with:
+          dockerfile: docker/web/Dockerfile
+
+      - name: Build Docker image
+        run: docker build -t app:latest ./docker/web
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: app:latest
+          severity: CRITICAL
+          format: table
+          exit-code: 1 
+          ignore-unfixed: true
