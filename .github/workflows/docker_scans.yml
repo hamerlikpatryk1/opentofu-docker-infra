@@ -11,9 +11,6 @@ on:
       - 'docker/web/**'
       - "!docker/web/README.md"
       
-
-#test
-      
 jobs:
   docker-scan:
     runs-on: ubuntu-latest

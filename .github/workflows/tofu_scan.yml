@@ -50,5 +50,3 @@ jobs:
           scan-ref: .
           severity: HIGH,CRITICAL
           exit-code: 0
-      - name: Test Comment
-        run: echo "#test"

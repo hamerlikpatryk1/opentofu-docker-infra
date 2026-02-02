@@ -1,7 +1,5 @@
 name: Security and Linting
 
-#test
-
 on:
   pull_request:
     paths:

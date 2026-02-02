@@ -1,7 +1,5 @@
 name: Tofu Deploy
 
-#test
-
 on:
   workflow_dispatch:
 

@@ -1,7 +1,5 @@
 name: Tofu Validate & Plan
 
-#test
-
 on: 
   workflow_dispatch:
     inputs:
