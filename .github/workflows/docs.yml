@@ -13,6 +13,8 @@ on:
       - "!README.md"
       - "!infra/modules/**/README.md"
 
+#test
+
 jobs:
   terraform-docs:
     runs-on: ubuntu-latest
