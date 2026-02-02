@@ -10,8 +10,7 @@ on:
     paths:
       - 'docker/web/**'
       - "!docker/web/README.md"
-      
-      
+            
 jobs:
   docker-scan:
     runs-on: ubuntu-latest

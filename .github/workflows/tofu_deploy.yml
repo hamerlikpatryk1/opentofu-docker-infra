@@ -44,8 +44,6 @@ jobs:
     needs: determine-env
     runs-on: ubuntu-latest
 
-    environment: ${{ needs.determine-env.outputs.env }}
-
     env:
       TF_IN_AUTOMATION: "true"
       ENV: ${{ needs.determine-env.outputs.env }}
@@ -73,9 +71,6 @@ jobs:
           ${{ secrets.TFVARS }}
           EOF
 
-      - name: Show generated tfvars
-        run: cat infra/envs/${ENV}.tfvars
-
       - name: Tofu Init
         run: tofu init
 
@@ -90,5 +85,6 @@ jobs:
       #   Tofu code should be deployable but don't actually run terraform apply
       # - name: Tofu Apply
       #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
+      #   environment: ${{ needs.determine-env.outputs.env }}
       #   run: |
       #     tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"

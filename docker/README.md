@@ -1,6 +1,6 @@
 # App Docker Image
 
-![Docker Build](https://github.com/hamerlikpatryk1/opentofu-docker-infra/actions/workflows/build_docker.yml/badge.svg)
+![Docker Build](https://github.com/hamerlikpatryk1/opentofu-docker-infra/actions/workflows/docker_build.yml/badge.svg)
 
 ## Description
 
@@ -25,6 +25,17 @@ To build the image locally:
 ```bash
 docker build -t app:latest ./docker/web
 
+```
+
+To build full stack 
+
+```bash
+docker-compose -f ./docker/docker-compose.yml up -d
+```
+To stop stack
+
+```bash
+docker-compose -f docker/docker-compose.yml down
 ```
 ## Monitoring
 

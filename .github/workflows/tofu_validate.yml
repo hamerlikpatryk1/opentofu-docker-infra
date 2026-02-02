@@ -74,16 +74,12 @@ jobs:
                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                 aws-region: eu-north-1
 
-
           - name: Generate tfvars
             run: |
               mkdir -p infra/envs
               cat <<'EOF' > infra/envs/${ENV}.tfvars
               ${{ secrets.TFVARS }}
               EOF
-      
-          - name: Show generated tfvars
-            run: cat infra/envs/${ENV}.tfvars
 
           - name: Tofu Init
             working-directory: .

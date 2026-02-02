@@ -35,6 +35,9 @@ No modules.
 
 | Name | Type |
 |------|------|
+| aws_iam_instance_profile.ec2_ssm_profile | resource |
+| aws_iam_role.ec2_ssm_role | resource |
+| aws_iam_role_policy_attachment.ec2_ssm_policy | resource |
 | aws_instance.this | resource |
 | aws_ssm_parameter.ecs_ami | data source |
 
@@ -42,6 +45,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment name | `string` | n/a | yes |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type | `string` | n/a | yes |
 | <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | Security group ID | `string` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | Subnet ID for EC2 instance | `string` | n/a | yes |
