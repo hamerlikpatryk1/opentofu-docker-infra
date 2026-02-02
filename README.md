@@ -260,10 +260,32 @@ terraform-docs markdown . > docs/MODULES.md
 ---
 
 ## Security
-* All infrastructure is scanned with Trivy
+* All infrastructure is scanned with Trivy, Gitleaks and TFLint
 * Docker images are scanned in the CI/CD pipeline
 * Secrets are managed via GitHub Actions secrets
 * State files are protected and backed up
+
+### Additional Security & Linting
+
+#### Secret Scanning (Gitleaks)
+- Gitleaks scans for secrets in code and history.
+- Run locally:
+   ```sh
+   docker run --rm -v $(pwd):/repo zricethezav/gitleaks:latest detect --source=/repo
+   ```
+- Runs automatically in CI ([.github/workflows/security.yml](.github/workflows/security.yml)).
+
+#### Terraform Linting (TFLint)
+- TFLint checks for errors and enforces best practices in Terraform/OpenTofu code.
+- Run locally:
+   ```sh
+   curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+   tflint --init
+   tflint --chdir=infra/modules/vpc
+   tflint --chdir=infra/modules/security_group
+   tflint --chdir=infra/modules/ec2
+   ```
+- Runs automatically in CI ([.github/workflows/security.yml](.github/workflows/security.yml)).
 
 ---
 
