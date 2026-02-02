@@ -1,0 +1,91 @@
+name: Tofu Deploy
+
+on:
+  workflow_dispatch:
+
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+      - staging
+      - IaCTofu
+
+jobs:
+  determine-env:  
+    name: Determine environment
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.merged == true
+    outputs:
+      env: ${{ steps.setenv.outputs.env }}
+
+    steps:
+      - name: Determine environment
+        id: setenv
+        run: |
+          echo "Event: ${{ github.event_name }}"
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "env=dev" >> $GITHUB_OUTPUT
+
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
+            echo "env=prod" >> $GITHUB_OUTPUT
+
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "staging" ]]; then
+            echo "env=staging" >> $GITHUB_OUTPUT
+
+          else
+            echo "env=dev" >> $GITHUB_OUTPUT
+          fi
+
+  terraform:
+    name: Tofu Deploy
+    needs: determine-env
+    runs-on: ubuntu-latest
+
+    environment: ${{ needs.determine-env.outputs.env }}
+
+    env:
+      TF_IN_AUTOMATION: "true"
+      ENV: ${{ needs.determine-env.outputs.env }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Tofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.11.4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+      
+      - name: Generate tfvars
+        run: |
+          mkdir -p infra/envs
+          cat <<'EOF' > infra/envs/${ENV}.tfvars
+          ${{ secrets.TFVARS }}
+          EOF
+
+      - name: Tofu Init
+        run: tofu init
+
+      - name: Tofu Workspace
+        run: |
+          tofu workspace select -or-create ${ENV}
+
+      - name: Tofu Plan
+        run: |
+          tofu plan -var-file="infra/envs/${ENV}.tfvars"
+
+      #   Tofu code should be deployable but don't actually run terraform apply
+      # - name: Tofu Apply
+      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/IaCTofu'
+      #   run: |
+      #     tofu apply -auto-approve -var-file="infra/envs/${ENV}.tfvars"
