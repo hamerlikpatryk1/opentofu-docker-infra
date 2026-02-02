@@ -44,4 +44,3 @@ jobs:
           tflint --chdir=infra/modules/vpc
           tflint --chdir=infra/modules/security_group
           tflint --chdir=infra/modules/ec2
-        working-directory: ./infra/modules
