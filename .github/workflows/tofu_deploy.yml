@@ -44,7 +44,6 @@ jobs:
     needs: determine-env
     runs-on: ubuntu-latest
 
-
     env:
       TF_IN_AUTOMATION: "true"
       ENV: ${{ needs.determine-env.outputs.env }}
